@@ -2,11 +2,11 @@ import React from 'react';
 
 const MOCK_POSTS = [
     {
-        id: 1,
+        id: 2,
         user: 'Jaideep',
         handle: '@jaideep_99',
         content: '"Landslide over here is crazy people are dying #NDRF"',
-        time: '2m ago',
+        time: '3m ago',
         image: null
     },
     {
