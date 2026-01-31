@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useKafkaStream from '../hooks/useKafkaStream';
+import { useKafka } from '../context/KafkaContext';
 import './KafkaStatus.css';
 
 /**
@@ -7,7 +7,7 @@ import './KafkaStatus.css';
  * Shows connection state and live event statistics
  */
 function KafkaStatus() {
-  const { isConnected, connectionStatus, stats } = useKafkaStream();
+  const { isConnected, connectionStatus, stats, activeDisasters } = useKafka();
   const [pulse, setPulse] = useState(false);
 
   // Pulse animation when new events arrive
@@ -37,6 +37,11 @@ function KafkaStatus() {
         <span className="status-text">
           Kafka: {connectionStatus.charAt(0).toUpperCase() + connectionStatus.slice(1)}
         </span>
+        {activeDisasters.length > 0 && (
+          <span className="active-disasters-badge">
+            {activeDisasters.length} Active Disasters
+          </span>
+        )}
       </div>
 
       {isConnected && (

@@ -1,20 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { SocialFeed } from './SocialFeed';
+import { useKafka } from '../context/KafkaContext';
+
+const getDisasterIcon = (type) => {
+  const icons = {
+    flood: '🌊',
+    cyclone: '🌀',
+    earthquake: '🌍',
+    fire: '🔥',
+    landslide: '⛰️',
+    drought: '☀️',
+    heatwave: '🌡️'
+  };
+  return icons[type] || '⚠️';
+};
 
 export const DisasterDetail = ({ onBack, data }) => {
-    const [coords, setCoords] = useState({ lat: '30.37', lng: '79.31' });
+    const { events } = useKafka();
+    const [coords, setCoords] = useState({ 
+        lat: data.location?.coordinates?.lat?.toFixed(4) || '28.6139', 
+        lng: data.location?.coordinates?.lng?.toFixed(4) || '77.2090' 
+    });
     const [selectedPlatform, setSelectedPlatform] = useState(null);
+    
+    // Get related events for this disaster (matching city or disaster type)
+    const relatedEvents = events.filter(e => {
+        const matchCity = e.location?.city?.toLowerCase() === data.location?.city?.toLowerCase();
+        const matchType = e.disaster?.type?.toLowerCase() === data.type?.toLowerCase();
+        return matchCity || matchType;
+    }).slice(0, 15);
 
-    // Simulate updating telemetry/coordinates
+    // Simulate updating telemetry/coordinates based on actual location
     useEffect(() => {
+        const baseLat = data.location?.coordinates?.lat || 28.6139;
+        const baseLng = data.location?.coordinates?.lng || 77.2090;
         const interval = setInterval(() => {
             setCoords({
-                lat: (30 + Math.random()).toFixed(4),
-                lng: (79 + Math.random()).toFixed(4)
+                lat: (baseLat + (Math.random() - 0.5) * 0.01).toFixed(4),
+                lng: (baseLng + (Math.random() - 0.5) * 0.01).toFixed(4)
             });
         }, 2000);
         return () => clearInterval(interval);
-    }, []);
+    }, [data]);
 
     if (selectedPlatform) {
         return (
@@ -25,17 +52,69 @@ export const DisasterDetail = ({ onBack, data }) => {
         );
     }
 
+    // Get severity color
+    const severityColors = {
+        critical: '#ef4444',
+        high: '#f97316',
+        medium: '#eab308',
+        low: '#22c55e'
+    };
+    
+    const severityColor = severityColors[data.severity] || '#94a3b8';
+    const icon = getDisasterIcon(data.type);
+    const cityName = data.location?.city || data.location || 'Unknown';
+    const stateName = data.location?.state || '';
+
     return (
         <div className="detail-container">
             <button className="back-btn" onClick={onBack}>
-                ← BACK
+                ← BACK TO DASHBOARD
             </button>
 
             <div className="detail-header-section">
                 <h1 className="detail-title">
-                    {data.type} <span className="detail-divider">/</span> {data.location}
+                    {icon} {data.type?.charAt(0).toUpperCase() + data.type?.slice(1)} 
+                    <span className="detail-divider">/</span> 
+                    {cityName}{stateName ? `, ${stateName}` : ''}
                 </h1>
-                <p className="detail-subtitle">Chamoli District</p>
+                <div className="detail-meta">
+                    <span 
+                        className="severity-indicator" 
+                        style={{ backgroundColor: severityColor }}
+                    >
+                        {data.severity?.toUpperCase()} SEVERITY
+                    </span>
+                    <span className="event-count">📊 {data.eventCount || 1} reports tracked</span>
+                    <span className="confidence-score">🎯 {Math.round((data.confidence || 0.85) * 100)}% confidence</span>
+                </div>
+            </div>
+
+            {/* Real-time Event Feed */}
+            <div className="live-updates-section">
+                <h3>📡 Live Event Stream ({relatedEvents.length} events)</h3>
+                {relatedEvents.length > 0 ? (
+                    <div className="live-updates-list">
+                        {relatedEvents.map((event, idx) => (
+                            <div key={idx} className="live-update-item">
+                                <span className="update-time">
+                                    {new Date(event.timestamp).toLocaleTimeString()}
+                                </span>
+                                <span className="update-source">
+                                    {event.source === 'twitter' ? '🐦' : event.source === 'gdelt' ? '📰' : '📡'}
+                                    {event.source}
+                                </span>
+                                <span className="update-text">
+                                    {event.content || event.title || 
+                                     (event.readings ? `Sensor: ${JSON.stringify(event.readings)}` : 'Event detected')}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="waiting-for-events">
+                        <p>Waiting for related events...</p>
+                    </div>
+                )}
             </div>
 
             {/* Stats Row */}

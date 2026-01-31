@@ -1,0 +1,205 @@
+/* Disaster Cards - Kafka Powered */
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 400px;
+}
+
+.cards-container.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.connecting-message,
+.waiting-message {
+  text-align: center;
+  color: #94a3b8;
+}
+
+.connecting-message p,
+.waiting-message p {
+  font-size: 1.25rem;
+  margin: 16px 0 8px;
+}
+
+.connecting-message .status,
+.waiting-message .status {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #334155;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.pulse-icon {
+  font-size: 3rem;
+  display: block;
+  animation: pulse-scale 2s infinite;
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+/* Disaster Card */
+.disaster-card-wrapper {
+  position: relative;
+  width: 320px;
+  animation: card-enter 0.4s ease-out;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.disaster-card-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 16px;
+  opacity: 0.3;
+  filter: blur(8px);
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+
+.disaster-card-wrapper:hover .disaster-card-glow {
+  opacity: 0.5;
+}
+
+.disaster-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 4px solid;
+  border-radius: 12px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.disaster-card-wrapper:hover .disaster-card {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.disaster-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.disaster-icon {
+  font-size: 1.5rem;
+}
+
+.disaster-type {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.disaster-separator {
+  color: #475569;
+}
+
+.disaster-location {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.severity-badge {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* Stats Row */
+.disaster-card-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 12px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* Footer */
+.disaster-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.source-tags {
+  display: flex;
+  gap: 6px;
+}
+
+.source-tag {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.time-ago {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .disaster-card-wrapper {
+    width: 100%;
+    max-width: 400px;
+  }
+}

@@ -192,8 +192,8 @@ async function startSimulation() {
       console.error('Error simulating event:', error);
     }
 
-    // Schedule next event (2-10 seconds)
-    const nextDelay = Math.floor(Math.random() * 8000 + 2000);
+    // Schedule next event (8-20 seconds - slower for better UX)
+    const nextDelay = Math.floor(Math.random() * 12000 + 8000);
     setTimeout(simulateEvents, nextDelay);
   }
 

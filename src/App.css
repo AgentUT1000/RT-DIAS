@@ -284,8 +284,32 @@ body {
   bottom: 24px;
   left: 84px;
   /* sidebar width + padding */
-  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 20;
+  transition: all 0.3s ease;
+}
+
+.connection-status.connected {
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.connection-status.disconnected {
+  color: #6b7280;
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+.connection-status .status-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* --- DETAIL VIEW --- */
@@ -299,6 +323,93 @@ body {
   align-items: center;
   position: relative;
   animation: fadeIn 0.5s ease-out;
+}
+
+/* Detail Meta */
+.detail-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.severity-indicator {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.event-count,
+.sources {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+/* Live Updates Section */
+.live-updates-section {
+  width: 100%;
+  max-width: 1000px;
+  margin: 24px 0;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.live-updates-section h3 {
+  color: #10b981;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.live-updates-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.live-update-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8rem;
+}
+
+.live-update-item:last-child {
+  border-bottom: none;
+}
+
+.update-time {
+  color: #64748b;
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.update-source {
+  color: #60a5fa;
+  flex-shrink: 0;
+  width: 80px;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+.update-text {
+  color: #e2e8f0;
+  flex: 1;
+}
+
+/* KafkaStatus badge */
+.active-disasters-badge {
+  margin-left: auto;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 @keyframes fadeIn {
