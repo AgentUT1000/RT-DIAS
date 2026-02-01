@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { SocialFeed } from './SocialFeed';
+import { getSeverityColor, getSeverityLabel, getDisasterIcon, formatTimeAgo } from '../utils/helpers';
 
 export const DisasterDetail = ({ onBack, data }) => {
-    const [coords, setCoords] = useState({ lat: '30.37', lng: '79.31' });
+    const [coords, setCoords] = useState({ lat: data.coordinates?.lat || 30.37, lng: data.coordinates?.lng || 79.31 });
     const [selectedPlatform, setSelectedPlatform] = useState(null);
+
+    const severityColor = getSeverityColor(data.severity);
 
     // Simulate updating telemetry/coordinates
     useEffect(() => {
         const interval = setInterval(() => {
             setCoords({
-                lat: (30 + Math.random()).toFixed(4),
-                lng: (79 + Math.random()).toFixed(4)
+                lat: ((data.coordinates?.lat || 30) + Math.random() * 0.01).toFixed(4),
+                lng: ((data.coordinates?.lng || 79) + Math.random() * 0.01).toFixed(4)
             });
         }, 2000);
         return () => clearInterval(interval);
-    }, []);
+    }, [data.coordinates]);
 
     if (selectedPlatform) {
         return (
@@ -32,10 +35,16 @@ export const DisasterDetail = ({ onBack, data }) => {
             </button>
 
             <div className="detail-header-section">
+                <div className="detail-severity-badge" style={{ backgroundColor: `${severityColor}20`, color: severityColor }}>
+                    <span className="severity-dot" style={{ backgroundColor: severityColor }}></span>
+                    {getSeverityLabel(data.severity)} ALERT
+                </div>
                 <h1 className="detail-title">
+                    <span className="detail-icon">{getDisasterIcon(data.type)}</span>
                     {data.type} <span className="detail-divider">/</span> {data.location}
                 </h1>
-                <p className="detail-subtitle">Chamoli District</p>
+                <p className="detail-subtitle">{data.district || 'District'}</p>
+                <p className="detail-time">Reported {formatTimeAgo(data.reportedAt)} • Last updated {formatTimeAgo(data.lastUpdate)}</p>
             </div>
 
             {/* Stats Row */}
@@ -44,28 +53,28 @@ export const DisasterDetail = ({ onBack, data }) => {
                     <div className="stat-icon-box orange">🌡</div>
                     <div className="stat-info">
                         <span className="stat-label">TEMP</span>
-                        <span className="stat-value">8°C</span>
+                        <span className="stat-value">{data.stats?.temp || '8°C'}</span>
                     </div>
                 </div>
                 <div className="stat-pill">
                     <div className="stat-icon-box blue">💨</div>
                     <div className="stat-info">
                         <span className="stat-label">WIND</span>
-                        <span className="stat-value">45 km/h</span>
+                        <span className="stat-value">{data.stats?.wind || '45 km/h'}</span>
                     </div>
                 </div>
                 <div className="stat-pill">
                     <div className="stat-icon-box green">👁</div>
                     <div className="stat-info">
                         <span className="stat-label">VISIBILITY</span>
-                        <span className="stat-value">1.2 km</span>
+                        <span className="stat-value">{data.stats?.visibility || '1.2 km'}</span>
                     </div>
                 </div>
                 <div className="stat-pill">
                     <div className="stat-icon-box purple">⏲</div>
                     <div className="stat-info">
                         <span className="stat-label">PRESSURE</span>
-                        <span className="stat-value">1004 hPa</span>
+                        <span className="stat-value">{data.stats?.pressure || '1004 hPa'}</span>
                     </div>
                 </div>
             </div>
