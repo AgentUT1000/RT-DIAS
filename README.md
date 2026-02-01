@@ -7,6 +7,8 @@ RT-DIAS is an event-driven microservices platform that transforms chaotic social
 The Problem: In disaster scenarios, critical hours are lost due to bureaucratic reporting bottlenecks. Social media contains ground-truth evidence, but it's buried in terabytes of unstructured data across multiple languages and formats.
 Our Solution: Real-time aggregation, AI-powered verification, and intelligent routing of disaster intelligence from Instagram, GDELT, and other OSINT sources.
 
+The main page consists of all the active events that are reported on the internet and scraped by our system(currently we pre-feed the data since API services aren't active and some of them are paid)
+![Uploading image.png…]()
 
 
 
