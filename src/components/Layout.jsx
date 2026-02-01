@@ -1,12 +1,49 @@
-import { useState } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { BackgroundAnimation } from './BackgroundAnimation';
 import { DisasterCards } from './DisasterCards';
 import { DisasterDetail } from './DisasterDetail';
+import { DisasterMap } from './DisasterMap';
+import { AlertsView } from './AlertsView';
+import { SettingsView } from './SettingsView';
+import NewsPanel from './NewsPanel';
+import GdeltEventsPanel from './GdeltEventsPanel';
+import HotspotDashboard from './HotspotDashboard';
+import { useApp } from '../context/AppContext';
 
 export const Layout = () => {
-    const [selectedDisaster, setSelectedDisaster] = useState(null);
+    const { currentView, selectedDisaster, setSelectedDisaster, notifications, removeNotification } = useApp();
+
+    const renderContent = () => {
+        // If a disaster is selected from dashboard, show detail view
+        if (selectedDisaster && currentView === 'dashboard') {
+            return (
+                <DisasterDetail
+                    data={selectedDisaster}
+                    onBack={() => setSelectedDisaster(null)}
+                />
+            );
+        }
+
+        switch (currentView) {
+            case 'dashboard':
+                return <DisasterCards />;
+            case 'map':
+                return <DisasterMap />;
+            case 'hotspots':
+                return <HotspotDashboard />;
+            case 'alerts':
+                return <AlertsView />;
+            case 'news':
+                return <NewsPanel />;
+            case 'gdelt':
+                return <GdeltEventsPanel />;
+            case 'settings':
+                return <SettingsView />;
+            default:
+                return <DisasterCards />;
+        }
+    };
 
     return (
         <div className="app-container">
@@ -18,15 +55,26 @@ export const Layout = () => {
                 <Header />
 
                 <main className="content-area">
-                    {!selectedDisaster ? (
-                        <DisasterCards onSelect={setSelectedDisaster} />
-                    ) : (
-                        <DisasterDetail
-                            data={selectedDisaster}
-                            onBack={() => setSelectedDisaster(null)}
-                        />
-                    )}
+                    {renderContent()}
                 </main>
+            </div>
+
+            {/* Notifications Toast */}
+            <div className="notifications-container">
+                {notifications.map((notification) => (
+                    <div
+                        key={notification.id}
+                        className={`notification-toast ${notification.type || 'info'}`}
+                    >
+                        <span className="notification-message">{notification.message}</span>
+                        <button
+                            className="notification-close"
+                            onClick={() => removeNotification(notification.id)}
+                        >
+                            ×
+                        </button>
+                    </div>
+                ))}
             </div>
 
             <div className="connection-status">
