@@ -20,5 +20,6 @@ Along with that a Live News Feed connected with newsdata.io that gives news from
 Next we added a Global Event Tracker(GDELT Project) which has a time range and a region filter - this gives you the reports from the authentic news sources of the respective countries in their respective language
 <img width="1918" height="946" alt="4" src="https://github.com/user-attachments/assets/18ece5c1-8565-4452-81d9-7c0b31270e49" />
 
-
+You can find the deployed site here 
+https://rtdias.vercel.app/ 
 
